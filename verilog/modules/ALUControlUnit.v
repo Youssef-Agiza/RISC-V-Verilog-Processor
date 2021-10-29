@@ -1,26 +1,35 @@
-module ALUControlUnit(input [1:0] ALUOp, input [14:12] Inst, input Inst1, output reg [3:0] ALUSelection );
 
-always@(*)
-case(ALUOp)
-  2'b00:  ALUSelection =4'b0010 ;
-  2'b01:  ALUSelection =4'b0110 ;
-  2'b10: 
-  begin 
-  if (Inst == 3'b110)
-  ALUSelection =4'b0001 ;
-  else if (Inst == 3'b111)
-  ALUSelection =4'b0000 ;
-  else if (Inst == 3'b000)
-  begin
-    if (Inst1==1'b0)
-    ALUSelection =4'b0010 ;
-    else if (Inst1==1'b1)
-    ALUSelection =4'b0110 ;
-  end
-  end
-  default: ALUSelection =4'b0000; 
+`include "defines.v"
 
 
+module ALUControlUnit(input [1:0] ALUOp, input [`IR_funct3] F3, input [`IR_funct7] F7, output reg [3:0] ALUSelection );
 
-endcase
+
+  always@(*)
+    case(ALUOp)
+      `ALU_OP_Load:  ALUSelection = `ALU_ADD ;
+      
+      // `ALU_OP_Branch:  ALUSelection =`ALU_SUB ;
+
+      `ALU_OP_Arith: 
+        case(F3)
+
+          `F3_ADD: ALUSelection= (F7[30]==1'b0)?`ALU_ADD:`ALU_SUB;
+          `F3_OR: ALUSelection =`ALU_OR ;
+          `F3_XOR: ALUSelection =`ALU_XOR;
+          `F3_AND: ALUSelection = `ALU_AND ;
+        
+          `F3_SLL: ALUSelection =`ALU_SLL;
+          `F3_SRL: ALUSelection =`ALU_SRL;
+
+          `F3_SLT: ALUSelection =`ALU_SLT;
+          `F3_SLTU: ALUSelection =`ALU_SLTU;
+
+        endcase
+      
+      default: ALUSelection =`ALU_PASS; 
+
+    endcase
+
+
 endmodule
