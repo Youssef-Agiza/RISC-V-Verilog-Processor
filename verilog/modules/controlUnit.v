@@ -10,6 +10,7 @@ output reg MemRead,
 output reg MemtoReg,
 output reg [1:0] ALUOp,
 output reg MemWrite,
+output reg ALUSrc1;
 output reg ALUSrc,
 output reg RegWrite
 );
@@ -28,6 +29,7 @@ output reg RegWrite
                       MemtoReg = 1'b0;
                       ALUOp =   `ALU_OP_Arith;
                       MemWrite = 1'b0;
+					  ALUSrc1 =  1'b0; 
                       ALUSrc =   1'b0;
                       RegWrite = 1'b1;
                     end
@@ -41,6 +43,28 @@ output reg RegWrite
                       ALUSrc =   1'b1;
                       RegWrite = 1'b1;
                     end
+		`OPCODE_LUI:
+					begin
+					  branch =   1'b0;
+                      MemRead =  1'b0;
+                      MemtoReg = 1'b0;
+                      ALUOp =  `ALU_OP_PASS;
+                      MemWrite = 1'b0;
+					  ALUSrc1 =  1'b0;
+                      ALUSrc =   1'b1;
+                      RegWrite = 1'b1;
+                    end
+		`OPCODE_AUIPC:
+					begin
+					  branch =   1'b0;
+                      MemRead =  1'b0;
+                      MemtoReg = 1'b0;
+                      ALUOp =  `ALU_OP_Load;
+                      MemWrite = 1'b0;
+					  ALUSrc1 =  1'b1;
+                      ALUSrc =   1'b1;
+                      RegWrite = 1'b1;
+                    end
         `OPCODE_Load:
                     begin
                       branch =   1'b0;
@@ -48,6 +72,7 @@ output reg RegWrite
                       MemtoReg = 1'b1;
                       ALUOp =   `ALU_OP_Load;
                       MemWrite = 1'b0;
+					  ALUSrc1 =  1'b0;
                       ALUSrc =   1'b1;
                       RegWrite = 1'b1;
                     end
@@ -57,6 +82,7 @@ output reg RegWrite
                       MemRead =  1'b0;
                       ALUOp    = `ALU_OP_Load;
                       MemWrite = 1'b1;
+					  ALUSrc1 =  1'b0;
                       ALUSrc =   1'b1;
                       RegWrite = 1'b0;
                       MemtoReg=  1'b0;
@@ -67,6 +93,7 @@ output reg RegWrite
                       MemRead =  1'b0;
                       ALUOp =   `ALU_OP_Branch;
                       MemWrite = 1'b0;
+					  ALUSrc1 =  1'b0;
                       ALUSrc =   1'b0;
                       RegWrite = 1'b0;
                       MemtoReg=  1'b0;
@@ -77,6 +104,7 @@ output reg RegWrite
                       MemRead =  1'b0;
                       ALUOp =   `ALU_OP_PASS;
                       MemWrite = 1'b0;
+					  ALUSrc1 =  1'b0;
                       ALUSrc =   1'b0;
                       RegWrite = 1'b0;
                       MemtoReg=  1'b0;

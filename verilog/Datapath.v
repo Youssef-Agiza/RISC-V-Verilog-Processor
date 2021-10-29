@@ -9,6 +9,7 @@ module Datapath(
         output [31:0] regFileIn,
         output [31:0] imm,
         output [31:0] shiftLeftOut,
+		output [31:0] ALU1stSrc
         output [31:0] ALU2ndSrc,
         output [31:0] ALUOut,
         output [31:0] memoryOut,
@@ -17,6 +18,7 @@ module Datapath(
         output MemRead,
         output MemtoReg,
         output MemWrite,
+		output ALUSrc1, // this is the selection line for ALU 1st input
         output ALUSrc,
         output RegWrite
     );
@@ -39,8 +41,10 @@ module Datapath(
     RegFile regFile(clk, rst, IR[`IR_rs1], IR[`IR_rs2], IR[`IR_rd], regFileIn,  RegWrite, rs1Read, rs2Read ); //regWrite enables writing
      
     //3- Control unit
-    controlUnit CU( `OPCODE, branch, MemRead,MemtoReg, ALUOp,MemWrite,  ALUSrc, RegWrite);
+    controlUnit CU( `OPCODE, branch, MemRead,MemtoReg, ALUOp,MemWrite,  ALUSrc1, ALUSrc, RegWrite);
 
+	// MUX for ALU 1st input
+	assign ALU1stSrc = (ALUSrc1)?PCOut:rs1Read;
     
     //4- IMM Gen
     rv32_ImmGen immGen(IR,imm);    
@@ -50,7 +54,7 @@ module Datapath(
     ALUControlUnit ALUControl(ALUOp,IR[`IR_funct3],IR[`IR_funct7],ALUSelection);
     
     //6- ALU 
-    prv32_ALU ALU(.a(rs1Read), .b(ALU2ndSrc), .shamt(ALU2ndSrc[4:0]),
+    prv32_ALU ALU(.a(ALU1stSrc), .b(ALU2ndSrc), .shamt(ALU2ndSrc[4:0]),
                   .cf(cf), .zf(zf), .vf(vf), .sf(sf)
                  , .alufn(ALUSelection), .r(ALUOut));
 

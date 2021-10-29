@@ -40,7 +40,7 @@ module prv32_ALU(
             `ALU_SLL:  r=sh;
             // slt & sltu
             `ALU_SLT:  r = {31'b0,(sf != vf)}; 
-            `ALU_SLTU:  r = {31'b0,(~cf)};            	
+            `ALU_SLTU:  r = {31'b0,(~cf)};     
         endcase
     end
 endmodule

@@ -48,6 +48,7 @@
 `define     ALU_SLT                 4'b11_01
 `define     ALU_SLTU                4'b11_11
 
+
 `define     ALU_OP_Load             2'b00
 `define     ALU_OP_Branch           2'b01
 `define     ALU_OP_Arith            2'b10
