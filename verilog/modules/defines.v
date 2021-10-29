@@ -27,6 +27,12 @@
 `define     F3_OR                   3'b110
 `define     F3_AND                  3'b111
 
+`define     F3_LB                   3'b000
+`define     F3_LH                   3'b001
+`define     F3_LW                   3'b010
+`define     F3_LBU                  3'b100
+`define     F3_LHU                  3'b101
+
 `define     BR_BEQ                  3'b000
 `define     BR_BNE                  3'b001
 `define     BR_BLT                  3'b100

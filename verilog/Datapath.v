@@ -4,8 +4,8 @@ module Datapath(
         output [31:0] PCOut,
         output [31:0] BranchTargetAddr,
         output [31:0] PCIn,
-        output [31:0] rs1Read,
-        output [31:0] rs2Read,
+        output [31:0] rs1,
+        output [31:0] rs2,
         output [31:0] regFileIn,
         output [31:0] imm,
         output [31:0] shiftLeftOut,
@@ -38,7 +38,7 @@ module Datapath(
     InstMem instMem(PCOut[7:2],IR);
         
     //2- RF
-    RegFile regFile(clk, rst, IR[`IR_rs1], IR[`IR_rs2], IR[`IR_rd], regFileIn,  RegWrite, rs1Read, rs2Read ); //regWrite enables writing
+    RegFile regFile(clk, rst, IR[`IR_rs1], IR[`IR_rs2], IR[`IR_rd], regFileIn,  RegWrite, rs1, rs2 ); //regWrite enables writing
      
     //3- Control unit
     controlUnit CU( `OPCODE, branch, MemRead,MemtoReg, ALUOp,MemWrite,  ALUSrc1, ALUSrc, RegWrite);
@@ -48,10 +48,10 @@ module Datapath(
     
     //4- IMM Gen
     rv32_ImmGen immGen(IR,imm);    
-    assign ALU2ndSrc=(ALUSrc)?imm:rs2Read;
+    assign ALU2ndSrc=(ALUSrc)?imm:rs2;
 
     //5- ALU control
-    ALUControlUnit ALUControl(ALUOp,IR[`IR_funct3],IR[`IR_funct7],ALUSelection);
+    ALUControlUnit ALUControl(ALUOp, IR[`IR_funct3],IR[`IR_funct7],ALUSelection);
     
     //6- ALU 
     prv32_ALU ALU(.a(ALU1stSrc), .b(ALU2ndSrc), .shamt(ALU2ndSrc[4:0]),
@@ -63,10 +63,14 @@ module Datapath(
   
     
     //7- Data mem
-    DataMem dataMem( clk, rst,  MemRead,  MemWrite, ALUOut [7:2],  rs2Read, memoryOut);
+    DataMem dataMem( .clk(clk), .rst(rst), .F3(IR[`IR_funct3]),
+                     .mem_read(MemRead),  .mem_write(MemWrite),
+                     .addr(ALUOut [7:2]),  
+                     .data_in(rs2), .data_out(memoryOut));
+
     assign regFileIn= (MemtoReg)?memoryOut:ALUOut;
     
-    //8-shift and adder
+    //8- shift and adder
     ShiftLeftNBit shifter(imm,shiftLeftOut);
     RCANBit RCA( PCOut,  shiftLeftOut,  BranchTargetAddr);    
     
@@ -76,5 +80,4 @@ module Datapath(
     
 
     
-    // call on Test16BitOut here
 endmodule
