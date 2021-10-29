@@ -8,6 +8,7 @@ module ALUControlUnit(input [1:0] ALUOp, input [`IR_funct3] F3, input [`IR_funct
   always@(*)
     case(ALUOp)
       `ALU_OP_Load:  ALUSelection = `ALU_ADD ;
+	  `ALU_OP_PASS:  ALUSelection = `ALU_PASS;
       
       // `ALU_OP_Branch:  ALUSelection =`ALU_SUB ;
 
