@@ -13,6 +13,7 @@ output reg MemWrite,
 output reg ALUSrc1;
 output reg ALUSrc,
 output reg RegWrite
+output reg jump
 );
 
 
@@ -32,6 +33,7 @@ output reg RegWrite
 					  ALUSrc1 =  1'b0; 
                       ALUSrc =   1'b0;
                       RegWrite = 1'b1;
+					  jump = 1'b0;
                     end
         `OPCODE_Arith_I: 
                     begin
@@ -42,6 +44,7 @@ output reg RegWrite
                       MemWrite = 1'b0;
                       ALUSrc =   1'b1;
                       RegWrite = 1'b1;
+					  jump = 1'b0;
                     end
 		`OPCODE_LUI:
 					begin
@@ -53,6 +56,7 @@ output reg RegWrite
 					  ALUSrc1 =  1'b0;
                       ALUSrc =   1'b1;
                       RegWrite = 1'b1;
+					  jump = 1'b0;
                     end
 		`OPCODE_AUIPC:
 					begin
@@ -64,6 +68,7 @@ output reg RegWrite
 					  ALUSrc1 =  1'b1;
                       ALUSrc =   1'b1;
                       RegWrite = 1'b1;
+					  jump = 1'b0;
                     end
         `OPCODE_Load:
                     begin
@@ -75,6 +80,7 @@ output reg RegWrite
 					  ALUSrc1 =  1'b0;
                       ALUSrc =   1'b1;
                       RegWrite = 1'b1;
+					  jump = 1'b0;
                     end
         `OPCODE_Store: 
                     begin
@@ -86,6 +92,7 @@ output reg RegWrite
                       ALUSrc =   1'b1;
                       RegWrite = 1'b0;
                       MemtoReg=  1'b0;
+					  jump = 1'b0;
                     end
         `OPCODE_Branch: 
                     begin
@@ -97,7 +104,20 @@ output reg RegWrite
                       ALUSrc =   1'b0;
                       RegWrite = 1'b0;
                       MemtoReg=  1'b0;
+					  jump = 1'b0;
                     end
+		`OPCODE_Jal: 
+                    begin
+                      branch =   1'b0;
+                      MemRead =  1'b0;
+                      ALUOp =   `ALU_OP_PASS;
+                      MemWrite = 1'b0;
+					  ALUSrc1 =  1'b0;
+                      ALUSrc =   1'b1;
+                      RegWrite = 1'b1;
+                      MemtoReg=  1'b0;
+					  jump = 1'b1;
+                    end			
         default: 
                     begin 
                       branch =   1'b0;

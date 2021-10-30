@@ -27,6 +27,7 @@ module Datapath(
     wire [3:0]ALUSelection;
     wire zf,cf,sf,vf;
     wire [31:0] PCPlus4;
+	wire jump;
 
 
 
@@ -41,7 +42,7 @@ module Datapath(
     RegFile regFile(clk, rst, IR[`IR_rs1], IR[`IR_rs2], IR[`IR_rd], regFileIn,  RegWrite, rs1, rs2 ); //regWrite enables writing
      
     //3- Control unit
-    controlUnit CU( `OPCODE, branch, MemRead,MemtoReg, ALUOp,MemWrite,  ALUSrc1, ALUSrc, RegWrite);
+    controlUnit CU( `OPCODE, branch, MemRead,MemtoReg, ALUOp,MemWrite,  ALUSrc1, ALUSrc, RegWrite, jump);
 
 	// MUX for ALU 1st input
 	assign ALU1stSrc = (ALUSrc1)?PCOut:rs1Read;
@@ -72,11 +73,20 @@ module Datapath(
     
     //8- shift and adder
     ShiftLeftNBit shifter(imm,shiftLeftOut);
-    RCANBit RCA( PCOut,  shiftLeftOut,  BranchTargetAddr);    
+    RCANBit RCA( PCOut,  shiftLeftOut,  BranchTargetAddr); 
+
+
+	//9- Branch Control Unit
+	BranchControlUnit BCU(zf, cf,sf, vf, IR[`IR_funct3] ,branch , PCSrc);
+    // PCSrc is now S0
+	// jump signal coming from control unit is s1
+	
+	MUX4x1 mux4x1 (PCPlus4,BranchTargetAddr,BranchTargetAddr,ALUOut, branch, jump, PCIn);
     
-    //9- pc adder 
-    RCANBit RCA2(PCOut, 32'd4,PCPlus4);
-    assign PCIn= (branch&zf)?BranchTargetAddr:PCPlus4;
+	
+	//10- pc adder no longer needed 
+    //RCANBit RCA2(PCOut, 32'd4,PCPlus4);
+    //assign PCIn= (branch&zf)?BranchTargetAddr:PCPlus4;
     
 
     
