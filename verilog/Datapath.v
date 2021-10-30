@@ -19,7 +19,7 @@ module Datapath(
         output MemtoReg,
         output MemWrite,
 		output ALUSrc1, // this is the selection line for ALU 1st input
-        output ALUSrc,
+        output ALUSrc2,
         output RegWrite
     );
     
@@ -28,7 +28,7 @@ module Datapath(
     wire zf,cf,sf,vf;
     wire [31:0] PCPlus4;
 	wire jump;
-
+    wire [31:0] rdSrc;
 
 
     RegisterNBit PCReg(clk,rst,PCIn,1, PCOut );
@@ -42,14 +42,14 @@ module Datapath(
     RegFile regFile(clk, rst, IR[`IR_rs1], IR[`IR_rs2], IR[`IR_rd], regFileIn,  RegWrite, rs1, rs2 ); //regWrite enables writing
      
     //3- Control unit
-    controlUnit CU( `OPCODE, branch, MemRead,MemtoReg, ALUOp,MemWrite,  ALUSrc1, ALUSrc, RegWrite, jump);
+    controlUnit CU( `OPCODE, branch, MemRead,MemtoReg, ALUOp,MemWrite,  ALUSrc1, ALUSrc2, RegWrite, jump);
 
 	// MUX for ALU 1st input
 	assign ALU1stSrc = (ALUSrc1)?PCOut:rs1Read;
     
     //4- IMM Gen
     rv32_ImmGen immGen(IR,imm);    
-    assign ALU2ndSrc=(ALUSrc)?imm:rs2;
+    assign ALU2ndSrc=(ALUSrc2)?imm:rs2;
 
     //5- ALU control
     ALUControlUnit ALUControl(ALUOp, IR[`IR_funct3],IR[`IR_funct7],ALUSelection);
@@ -82,6 +82,7 @@ module Datapath(
 	// jump signal coming from control unit is s1
 	
 	MUX4x1 mux4x1 (PCPlus4,BranchTargetAddr,BranchTargetAddr,ALUOut, branch, jump, PCIn);
+    assign rdSrc=(jump)?ALUOut:PCPlus4; // mux between auipc/ALU and Jal rd(pc +4)
     
 	
 	//10- pc adder no longer needed 
