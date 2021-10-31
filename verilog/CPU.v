@@ -18,10 +18,11 @@ module CPU(input rclk,
   wire [31:0] imm;
   wire [31:0] shiftLeftOut;
   wire [31:0] ALU2ndSrc;
+  wire [31:0] ALU1stSrc;
   wire [31:0] ALUOut;
   wire [31:0] memoryOut;     
   wire [31:0] instruction;      
-  wire branch,MemRead,MemtoReg,MemWrite,ALUSrc2,RegWrite;
+  wire branch,MemRead,MemtoReg,MemWrite,ALUSrc1,ALUSrc2,RegWrite;
     wire [12:0] test13BitOut;
 
   Datapath dp(rclk,
@@ -34,6 +35,7 @@ module CPU(input rclk,
                  regFileIn,
                  imm,
                  shiftLeftOut,
+                  ALU1stSrc,
                  ALU2ndSrc,
                  ALUOut,
                  memoryOut,
@@ -42,6 +44,7 @@ module CPU(input rclk,
                    MemRead,
                   MemtoReg,
                   MemWrite,
+                  ALUSrc1,
                   ALUSrc2,
                   RegWrite
                  );

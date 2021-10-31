@@ -10,9 +10,9 @@ output reg MemRead,
 output reg MemtoReg,
 output reg [1:0] ALUOp,
 output reg MemWrite,
-output reg ALUSrc1;
+output reg ALUSrc1,
 output reg ALUSrc2,
-output reg RegWrite
+output reg RegWrite,
 output reg jump
 );
 
@@ -42,6 +42,7 @@ output reg jump
                       MemtoReg = 1'b0;
                       ALUOp =   `ALU_OP_Arith;
                       MemWrite = 1'b0;
+                      ALUSrc1 =  1'b0; 
                       ALUSrc2 =   1'b1;
                       RegWrite = 1'b1;
                       jump = 1'b0;
@@ -77,7 +78,7 @@ output reg jump
                       MemtoReg = 1'b1;
                       ALUOp =   `ALU_OP_Load;
                       MemWrite = 1'b0;
-					            ALUSrc1 =  1'b0;
+					  ALUSrc1 =  1'b0;
                       ALUSrc2 =   1'b1;
                       RegWrite = 1'b1;
                       jump = 1'b0;

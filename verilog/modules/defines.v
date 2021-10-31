@@ -15,6 +15,7 @@
 `define     OPCODE_Arith_R          5'b01_100
 `define     OPCODE_AUIPC            5'b00_101
 `define     OPCODE_LUI              5'b01_101
+`define     OPCODE_FENCE            5'b00_011 
 `define     OPCODE_SYSTEM           5'b11_100 
 `define     OPCODE_Custom           5'b10_001
 

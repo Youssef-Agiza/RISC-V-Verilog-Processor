@@ -1,3 +1,5 @@
+`include "modules/defines.v"
+
 module Datapath(
         input clk,
         input rst,
@@ -9,7 +11,7 @@ module Datapath(
         output [31:0] regFileIn,
         output [31:0] imm,
         output [31:0] shiftLeftOut,
-		output [31:0] ALU1stSrc
+		output [31:0] ALU1stSrc,
         output [31:0] ALU2ndSrc,
         output [31:0] ALUOut,
         output [31:0] memoryOut,
@@ -29,10 +31,12 @@ module Datapath(
     wire [31:0] PCPlus4;
 	wire jump;
     wire [31:0] rdSrc;
+    wire BCUOut;
+    wire pcLoad;
 
-
-    RegisterNBit PCReg(clk,rst,PCIn,1, PCOut );
-
+    RegisterNBit PCReg(clk,rst,PCIn,pcLoad, PCOut );
+    
+    assign pcLoad=(~(`OPCODE==`OPCODE_FENCE)&&~(`OPCODE==`OPCODE_SYSTEM));
     
 
     //1- IR mem
@@ -42,10 +46,10 @@ module Datapath(
     RegFile regFile(clk, rst, IR[`IR_rs1], IR[`IR_rs2], IR[`IR_rd], regFileIn,  RegWrite, rs1, rs2 ); //regWrite enables writing
      
     //3- Control unit
-    controlUnit CU( `OPCODE, branch, MemRead,MemtoReg, ALUOp,MemWrite,  ALUSrc1, ALUSrc2, RegWrite, jump);
+    controlUnit CU(IR[6:0], branch, MemRead,MemtoReg, ALUOp,MemWrite,  ALUSrc1, ALUSrc2, RegWrite, jump);
 
 	// MUX for ALU 1st input
-	assign ALU1stSrc = (ALUSrc1)?PCOut:rs1Read;
+	assign ALU1stSrc = (ALUSrc1)? PCOut:rs1;
     
     //4- IMM Gen
     rv32_ImmGen immGen(IR,imm);    
@@ -59,7 +63,6 @@ module Datapath(
                   .cf(cf), .zf(zf), .vf(vf), .sf(sf)
                  , .alufn(ALUSelection), .r(ALUOut));
 
-);
 
   
     
@@ -72,23 +75,20 @@ module Datapath(
     assign regFileIn= (MemtoReg)?memoryOut:ALUOut;
     
     //8- shift and adder
-    ShiftLeftNBit shifter(imm,shiftLeftOut);
-    RCANBit RCA( PCOut,  shiftLeftOut,  BranchTargetAddr); 
+    //ShiftLeftNBit shifter1(imm,shiftLeftOut);
+    RCANBit RCA( PCOut,  imm,  BranchTargetAddr); 
 
 
 	//9- Branch Control Unit
-	BranchControlUnit BCU(zf, cf,sf, vf, IR[`IR_funct3] ,branch , PCSrc);
-    // PCSrc is now S0
+	BCU bcu(zf, cf,sf, vf, IR[`IR_funct3] ,branch , BCUOut);
+    // BCUOut is now S0
 	// jump signal coming from control unit is s1
-	
-	MUX4x1 mux4x1 (PCPlus4,BranchTargetAddr,BranchTargetAddr,ALUOut, branch, jump, PCIn);
+	 RCANBit RCA2(PCOut, 32'd4,PCPlus4);
+//       assign PCIn= (branch&zf)?BranchTargetAddr:PCPlus4;
+	MUX4x1 mux4x1 (PCPlus4,BranchTargetAddr,BranchTargetAddr,ALUOut, BCUOut, jump, PCIn);
     assign rdSrc=(jump)?ALUOut:PCPlus4; // mux between auipc/ALU and Jal rd(pc +4)
     
-	
-	//10- pc adder no longer needed 
-    //RCANBit RCA2(PCOut, 32'd4,PCPlus4);
-    //assign PCIn= (branch&zf)?BranchTargetAddr:PCPlus4;
-    
+	    
 
     
 endmodule
