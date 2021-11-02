@@ -25,7 +25,7 @@ module Datapath(
         output RegWrite
     );
     
-    wire [1:0] ALUOp;
+    wire [2:0] ALUOp;
     wire [3:0]ALUSelection;
     wire zf,cf,sf,vf;
     wire [31:0] PCPlus4;
@@ -40,7 +40,7 @@ module Datapath(
     
 
     //1- IR mem
-    InstMem instMem(PCOut[7:2],IR);
+    InstMem instMem(PCOut[14:2],IR);
         
     //2- RF
     RegFile regFile(clk, rst, IR[`IR_rs1], IR[`IR_rs2], IR[`IR_rd], regFileIn,  RegWrite, rs1, rs2 ); //regWrite enables writing
@@ -69,10 +69,10 @@ module Datapath(
     //7- Data mem
     DataMem dataMem( .clk(clk), .rst(rst), .F3(IR[`IR_funct3]),
                      .mem_read(MemRead),  .mem_write(MemWrite),
-                     .addr(ALUOut [7:2]),  
+                     .addr(ALUOut [7:0]),  
                      .data_in(rs2), .data_out(memoryOut));
 
-    assign regFileIn= (MemtoReg)?memoryOut:ALUOut;
+    assign regFileIn= (jump)?PCPlus4:(MemtoReg)?memoryOut:ALUOut;
     
     //8- shift and adder
     //ShiftLeftNBit shifter1(imm,shiftLeftOut);
@@ -85,7 +85,8 @@ module Datapath(
 	// jump signal coming from control unit is s1
 	 RCANBit RCA2(PCOut, 32'd4,PCPlus4);
 //       assign PCIn= (branch&zf)?BranchTargetAddr:PCPlus4;
-	MUX4x1 mux4x1 (PCPlus4,BranchTargetAddr,BranchTargetAddr,ALUOut, BCUOut, jump, PCIn);
+//	MUX4x1 mux4x1 (PCPlus4,BranchTargetAddr,ALUOut,ALUOut, branch, jump, PCIn);
+assign PCIn=BCUOut?BranchTargetAddr:(jump)?ALUOut:PCPlus4;
     assign rdSrc=(jump)?ALUOut:PCPlus4; // mux between auipc/ALU and Jal rd(pc +4)
     
 	    

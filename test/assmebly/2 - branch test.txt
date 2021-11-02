@@ -1,0 +1,15 @@
+addi x1,x0, 0
+addi x2,x0, 2
+
+loop: #should cmp x1 and x2, (break the loop in the 2nd time)
+addi x1, x1,1 
+bge x1, x2, loop2
+blt x1,x2, loop
+
+loop2: # break the loop in 2nd time
+addi x2,x2,-1
+beq  x2, x0,loop3
+bne x2, x0, loop2
+
+loop3:
+ecall

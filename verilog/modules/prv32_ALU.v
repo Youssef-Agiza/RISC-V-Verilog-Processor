@@ -15,6 +15,9 @@ module prv32_ALU(
     
     assign {cf, add} = alufn[0] ? (a + op_b + 1'b1) : (a + b);
     
+   
+    
+    
     assign zf = (add == 0);
     assign sf = add[31];
     assign vf = (a[31] ^ (op_b[31]) ^ add[31] ^ cf);

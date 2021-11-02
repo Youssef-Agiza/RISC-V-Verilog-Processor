@@ -2,7 +2,7 @@
 `include "defines.v"
 
 
-module ALUControlUnit(input [1:0] ALUOp, input [`IR_funct3] F3, input [`IR_funct7] F7, output reg [3:0] ALUSelection );
+module ALUControlUnit(input [2:0] ALUOp, input [`IR_funct3] F3, input [`IR_funct7] F7, output reg [3:0] ALUSelection );
 
 
   always@(*)
@@ -11,7 +11,22 @@ module ALUControlUnit(input [1:0] ALUOp, input [`IR_funct3] F3, input [`IR_funct
 	  `ALU_OP_PASS:  ALUSelection = `ALU_PASS;
       
       // `ALU_OP_Branch:  ALUSelection =`ALU_SUB ;
-
+        
+      `ALU_OP_Arith_I:  
+        case(F3)
+                `F3_ADD: ALUSelection= `ALU_ADD;
+                `F3_OR: ALUSelection =`ALU_OR ;
+                `F3_XOR: ALUSelection =`ALU_XOR;
+                `F3_AND: ALUSelection = `ALU_AND ;
+              
+                `F3_SLL: ALUSelection =`ALU_SLL;
+                `F3_SRL: ALUSelection =`ALU_SRL;
+      
+                `F3_SLT: ALUSelection =`ALU_SLT;
+                `F3_SLTU: ALUSelection =`ALU_SLTU;
+              endcase
+        
+        
       `ALU_OP_Arith: 
         case(F3)
 

@@ -1,5 +1,5 @@
-module InstMem (input [5:0] addr, output [31:0] data_out);
- reg [31:0] mem [0:63];
+module InstMem (input [12:0] addr, output [31:0] data_out);
+ reg [31:0] mem [0:8183];
 
 // initial begin
  
@@ -47,7 +47,6 @@ module InstMem (input [5:0] addr, output [31:0] data_out);
 initial begin
 
 
-//$readmemh("C:/Users/John/Desktop/riscv32i/riscv32i.srcs/sources_1/imports/verilog/modules/hex/t1.hex",mem);
 
 
 
@@ -59,16 +58,56 @@ initial begin
 
 
 
-mem[0]=32'h0070e093;
-mem[1]=32'h00f00093;
-mem[2]=32'h00d09093;
-mem[3]=32'h0070e093;
-mem[4]=32'h00100023;
-mem[5]=32'h00101223;
-mem[6]=32'h00102423;
-mem[7]=32'h00000183;
-mem[8]=32'h00401203;
-mem[9]=32'h00802283;
+
+
+
+
+
+
+
+
+
+
+mem[0]=32'h00000013; //no op
+
+//*****
+//equivalent to li x1, 0x0fef
+mem[1]=32'h00fff0b7; //	lui x1 4095
+mem[2]=32'heff08093; //addi x1 x1 -257
+//****
+
+mem[3]=32'h00102023; //	sw x1 0(x0)
+mem[4]=32'h00101223; //	sh x1 4(x0)
+mem[5]=32'h00100423; // sb x1 8(x0)
+mem[6]=32'h00002103; //lw x2 0(x0)
+mem[7]=32'h00001183;  //lh x3 4(x0)
+mem[8]=32'h00000203; //lb x4 8(x0)
+mem[9]=32'h00005283;//lhu x5 4(x0)
+mem[10]=32'h00004303;//lbu x6 8(x0)
+
+
+//mem[0]=32'h00200113;
+//mem[1]=32'h008000ef;
+//mem[2]=32'h00000073;
+//mem[3]=32'h00300193;
+//mem[4]=32'h40218133;
+//mem[5]=32'h00310233;
+//mem[6]=32'h002242b3;
+//mem[7]=32'h00008367;
+
+//mem[0]=32'h00000013;
+//mem[1]=32'h000100b7;
+
+//mem[2]=32'hff008093;
+//mem[3]=32'h4030d093;
+
+
+
+
+
+
+
+
 
 
 

@@ -8,7 +8,7 @@ input [6:0] IR,
 output reg branch,
 output reg MemRead,
 output reg MemtoReg,
-output reg [1:0] ALUOp,
+output reg [2:0] ALUOp,
 output reg MemWrite,
 output reg ALUSrc1,
 output reg ALUSrc2,
@@ -40,7 +40,7 @@ output reg jump
                       branch =   1'b0;
                       MemRead =  1'b0;
                       MemtoReg = 1'b0;
-                      ALUOp =   `ALU_OP_Arith;
+                      ALUOp =   `ALU_OP_Arith_I;
                       MemWrite = 1'b0;
                       ALUSrc1 =  1'b0; 
                       ALUSrc2 =   1'b1;

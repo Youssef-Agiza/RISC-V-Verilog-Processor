@@ -56,10 +56,11 @@
 `define     ALU_SLTU                4'b11_11
 
 
-`define     ALU_OP_Load             2'b00
-`define     ALU_OP_Branch           2'b01
-`define     ALU_OP_Arith            2'b10
-`define     ALU_OP_PASS             2'b11
+`define     ALU_OP_Load             3'b000
+`define     ALU_OP_Branch           3'b001
+`define     ALU_OP_Arith            3'b010
+`define     ALU_OP_PASS             3'b011
+`define     ALU_OP_Arith_I          3'b100
 
 `define     SYS_EC_EB               3'b000
 
