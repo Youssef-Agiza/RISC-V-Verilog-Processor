@@ -1,0 +1,23 @@
+0.6
+2016.4
+Dec 14 2016
+22:58:16
+C:/Users/John/Desktop/riscv-processor-clone/project_1/project_1.sim/sim_1/behav/glbl.v,1481753704,verilog,,,,glbl,,,,,,,,
+C:/Users/John/Desktop/riscv-processor-clone/project_1/project_1.srcs/sim_1/imports/simulations/cpu_tb.v,1637080874,verilog,,,,CPU_tb,,,,,,,,
+C:/Users/John/Desktop/riscv-processor-clone/project_1/project_1.srcs/sources_1/imports/verilog/ALUControlUnit.v,1637066594,verilog,,,C:/Users/John/Desktop/riscv-processor-clone/project_1/project_1.srcs/sources_1/imports/verilog/defines.v,ALUControlUnit,,,,,,,,
+C:/Users/John/Desktop/riscv-processor-clone/project_1/project_1.srcs/sources_1/imports/verilog/BCU.v,1635869368,verilog,,,C:/Users/John/Desktop/riscv-processor-clone/project_1/project_1.srcs/sources_1/imports/verilog/defines.v,BCU,,,,,,,,
+C:/Users/John/Desktop/riscv-processor-clone/project_1/project_1.srcs/sources_1/imports/verilog/DFlipFlop.v,1635869368,verilog,,,,DFlipFlop,,,,,,,,
+C:/Users/John/Desktop/riscv-processor-clone/project_1/project_1.srcs/sources_1/imports/verilog/DataMem.v,1637085174,verilog,,,C:/Users/John/Desktop/riscv-processor-clone/project_1/project_1.srcs/sources_1/imports/verilog/defines.v,DataMem,,,,,,,,
+C:/Users/John/Desktop/riscv-processor-clone/project_1/project_1.srcs/sources_1/imports/verilog/Datapath.v,1637090181,verilog,,,C:/Users/John/Desktop/riscv-processor-clone/project_1/project_1.srcs/sources_1/imports/verilog/defines.v,Datapath,,,,,,,,
+C:/Users/John/Desktop/riscv-processor-clone/project_1/project_1.srcs/sources_1/imports/verilog/FullAdder.v,1635869368,verilog,,,,FullAdder,,,,,,,,
+C:/Users/John/Desktop/riscv-processor-clone/project_1/project_1.srcs/sources_1/imports/verilog/ImmGen.v,1635869368,verilog,,,C:/Users/John/Desktop/riscv-processor-clone/project_1/project_1.srcs/sources_1/imports/verilog/defines.v,rv32_ImmGen,,,,,,,,
+C:/Users/John/Desktop/riscv-processor-clone/project_1/project_1.srcs/sources_1/imports/verilog/InstMem.v,1637084161,verilog,,,,InstMem,,,,,,,,
+C:/Users/John/Desktop/riscv-processor-clone/project_1/project_1.srcs/sources_1/imports/verilog/MUX2x1.v,1635869368,verilog,,,,MUX2x1,,,,,,,,
+C:/Users/John/Desktop/riscv-processor-clone/project_1/project_1.srcs/sources_1/imports/verilog/MUX4x1.v,1637077220,verilog,,,,MUX4x1,,,,,,,,
+C:/Users/John/Desktop/riscv-processor-clone/project_1/project_1.srcs/sources_1/imports/verilog/RCANBit.v,1635869368,verilog,,,,RCANBit,,,,,,,,
+C:/Users/John/Desktop/riscv-processor-clone/project_1/project_1.srcs/sources_1/imports/verilog/RegFile.v,1637089915,verilog,,,,RegFile,,,,,,,,
+C:/Users/John/Desktop/riscv-processor-clone/project_1/project_1.srcs/sources_1/imports/verilog/RegisterNBit.v,1635869368,verilog,,,,RegisterNBit,,,,,,,,
+C:/Users/John/Desktop/riscv-processor-clone/project_1/project_1.srcs/sources_1/imports/verilog/controlUnit.v,1635869368,verilog,,,C:/Users/John/Desktop/riscv-processor-clone/project_1/project_1.srcs/sources_1/imports/verilog/defines.v,controlUnit,,,,,,,,
+C:/Users/John/Desktop/riscv-processor-clone/project_1/project_1.srcs/sources_1/imports/verilog/defines.v,1637066604,verilog,,,,,,,,,,,,
+C:/Users/John/Desktop/riscv-processor-clone/project_1/project_1.srcs/sources_1/imports/verilog/prv32_ALU.v,1637065324,verilog,,,C:/Users/John/Desktop/riscv-processor-clone/project_1/project_1.srcs/sources_1/imports/verilog/defines.v,prv32_ALU,,,,,,,,
+C:/Users/John/Desktop/riscv-processor-clone/project_1/project_1.srcs/sources_1/imports/verilog/shifter.v,1637064735,verilog,,,,shifter,,,,,,,,

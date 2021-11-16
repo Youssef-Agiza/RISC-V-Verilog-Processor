@@ -1,0 +1,24 @@
+# compile verilog/system verilog design source files
+verilog xil_defaultlib  "../../../project_1.srcs/sources_1/imports/verilog/DFlipFlop.v"
+verilog xil_defaultlib  "../../../project_1.srcs/sources_1/imports/verilog/MUX2x1.v"
+verilog xil_defaultlib  "../../../project_1.srcs/sources_1/imports/verilog/shifter.v"
+verilog xil_defaultlib  "../../../project_1.srcs/sources_1/imports/verilog/FullAdder.v"
+verilog xil_defaultlib  "../../../project_1.srcs/sources_1/imports/verilog/RegisterNBit.v"
+verilog xil_defaultlib  "../../../project_1.srcs/sources_1/imports/verilog/MUX4x1.v"
+verilog xil_defaultlib  "../../../project_1.srcs/sources_1/imports/verilog/DataMem.v"
+verilog xil_defaultlib  "../../../project_1.srcs/sources_1/imports/verilog/ALUControlUnit.v"
+verilog xil_defaultlib  "../../../project_1.srcs/sources_1/imports/verilog/InstMem.v"
+verilog xil_defaultlib  "../../../project_1.srcs/sources_1/imports/verilog/ImmGen.v"
+verilog xil_defaultlib  "../../../project_1.srcs/sources_1/imports/verilog/prv32_ALU.v"
+verilog xil_defaultlib  "../../../project_1.srcs/sources_1/imports/verilog/RegFile.v"
+verilog xil_defaultlib  "../../../project_1.srcs/sources_1/imports/verilog/BCU.v"
+verilog xil_defaultlib  "../../../project_1.srcs/sources_1/imports/verilog/controlUnit.v"
+verilog xil_defaultlib  "../../../project_1.srcs/sources_1/imports/verilog/RCANBit.v"
+verilog xil_defaultlib  "../../../project_1.srcs/sources_1/imports/verilog/Datapath.v"
+verilog xil_defaultlib  "../../../project_1.srcs/sim_1/imports/simulations/cpu_tb.v"
+
+# compile glbl module
+verilog xil_defaultlib "glbl.v"
+
+# Do not sort compile order
+nosort
