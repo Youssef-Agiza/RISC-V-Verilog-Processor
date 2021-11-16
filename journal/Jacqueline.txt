@@ -1,0 +1,5 @@
+October 28: Implemented the shifter module
+October 30: Implemented LUI and AUIPC and attached these instructions to the datapath
+October 31: Tested some of the instructions
+November 1: Drew the schematic used for the development and debugging 
+November 2: Finished testing all of the instructions with team

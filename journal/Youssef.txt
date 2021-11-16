@@ -1,0 +1,5 @@
+October 28: Modified ALU Signals and ALU Control Signals to support remaining instructions
+October 29: Modified Data Memory to support loading and storing with half words and bytes
+October 31: Modified Data Memory to be byte addressable.
+November 1: Tested some of the instructions with team
+November 2: Finished testing all of the instructions with team

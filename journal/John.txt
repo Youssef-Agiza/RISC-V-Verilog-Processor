@@ -1,0 +1,5 @@
+October 29: Implemented the branch control unit
+October 30: Implemented the JAL and JALR instructions
+October 31: Attached the previous instructions to the datapath using a 4x1 MUX and added the jump control signal
+November 1: Tested some of the instructions with team
+November 2: Finished testing all of the instructions with team
