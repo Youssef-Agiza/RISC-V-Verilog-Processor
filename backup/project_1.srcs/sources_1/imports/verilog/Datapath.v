@@ -274,7 +274,7 @@ module Datapath(
 
  
       
-  
+    
    RegisterNBit #(.N(178)) EX_MEM( .clk(clk),.rst(rst), .load(1'b1),
                           
                           .D({
@@ -325,7 +325,7 @@ module Datapath(
     
    	MUX4x1 PCInMux (PCPlus4,EX_MEM_BRANCH_TARGET_ADDRESS,
    	                EX_MEM_ALU_OUT,EX_MEM_ALU_OUT, 
-   	                {EX_MEM_JUMP,EX_MEM_BRANCH}, PCIn);
+   	                {EX_MEM_JUMP,BCUOut}, PCIn);
 //          assign PCIn=BCUOut?EX_MEM_ALU_OUT:(jump)?ALUOut:PCPlus4;
 
 
