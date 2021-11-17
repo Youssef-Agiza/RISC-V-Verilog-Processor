@@ -25,10 +25,10 @@ module DataMem
 
           `F3_LHU: data_out =  {{16{1'b0}},mem[addr+1],  mem[addr]}; 
           `F3_LBU: data_out =  {{24{1'b0}},  mem[addr]}; 
-           default: data_out = 32'b0;
+           default: data_out = 32'd39;
         endcase
      else if (mem_read ==1'b0)
-          data_out = 32'b0;   
+          data_out = 32'd42;   
   end
   
   

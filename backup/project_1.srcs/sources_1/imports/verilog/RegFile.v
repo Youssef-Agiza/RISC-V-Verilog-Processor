@@ -24,7 +24,7 @@ assign readData2=Q[rs2];
 
 assign Q[0]=32'd0;
 
-always @(posedge clk or posedge reset)
+always @(*)
 begin
 
 if (regWrite==1'b1) // write

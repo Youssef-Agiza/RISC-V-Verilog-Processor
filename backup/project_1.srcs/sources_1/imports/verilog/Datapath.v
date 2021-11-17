@@ -81,6 +81,14 @@ module Datapath(
 	  wire [4:0] EX_MEM_RD;
 	  wire [4:0]MEM_WB_RD ;
 	 
+	 //*****************Forwarding*******************//
+	  wire stall;
+	  wire [1:0] forwardA;
+	  wire [1:0] forwardB;
+      wire [32:0] RS2_forwarded;
+
+	 
+	 
 	 RCANBit RCA2(PCOut, 32'd4,PCPlus4,x);
 	 
 	 
@@ -90,12 +98,14 @@ module Datapath(
         assign pcLoad=(~(`OPCODE==`OPCODE_FENCE)&&~(`OPCODE==`OPCODE_SYSTEM));
       
      
-        RegisterNBit #(.N(96)) IF_ID( .clk(clk),.rst(rst),
+        RegisterNBit #(.N(96)) IF_ID( .clk(~clk),.rst(rst),
                               .D({PCOut,PCPlus4,IR}), .load(1'b1), 
                                .Q({IF_ID_PC,IF_ID_PC_PLUS4,IF_ID_INST})); 
          
    //******************** ID_EX *********************///
-      
+   
+   
+   
       
     
     
@@ -124,9 +134,9 @@ module Datapath(
                                        //read data 1, read data 2
                                        rs1, rs2,
                                      //funcs
-                                     IR[`IR_funct3],IR[`IR_funct7],
+                                     IF_ID_INST[`IR_funct3],IF_ID_INST[`IR_funct7],
                                        //imm/rd
-                                       imm, IR[`IR_rd],
+                                       imm, IF_ID_INST[`IR_rd],
                                        //ctrls
                                      branch, MemRead,MemtoReg,
                                      MemWrite,ALUSrc1, ALUSrc2,
@@ -185,7 +195,7 @@ module Datapath(
  
       
   
-   RegisterNBit #(.N(178)) EX_MEM( .clk(clk),.rst(rst), .load(1'b1),
+   RegisterNBit #(.N(178)) EX_MEM( .clk(~clk),.rst(rst), .load(1'b1),
                           
                           .D({
                           //PC's
@@ -226,7 +236,7 @@ module Datapath(
     
     //7- Data mem
     DataMem dataMem( .clk(clk), .rst(rst), .F3(EX_MEM_F3),
-                     .mem_read(EX_MEM_MEM_READ),  .mem_write(EX_MEM_REG_WRITE),
+                     .mem_read(EX_MEM_MEM_READ),  .mem_write(EX_MEM_MEM_WRITE),
                      .addr(EX_MEM_ALU_OUT[11:0]),  
                      .data_in(EX_MEM_READ_DATA2), .data_out(memoryOut));
 
