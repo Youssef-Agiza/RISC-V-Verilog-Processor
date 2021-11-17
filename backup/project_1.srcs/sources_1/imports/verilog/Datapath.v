@@ -14,8 +14,8 @@ module Datapath(
 		output [31:0] ALU1stSrc,
         output [31:0] ALU2ndSrc,
         output [31:0] ALUOut,
-        output [31:0] memoryOut,
-        output [31:0] IR,
+        output  [31:0] memoryOut,
+        output  [31:0] IR,
         output branch,
         output MemRead,
         output MemtoReg,
@@ -110,12 +110,33 @@ module Datapath(
 	 
     RegisterNBit PCReg(sclk,rst,PCIn,pcLoad, PCOut );
      //1- IR mem
-       InstMem instMem(PCOut[13:2],IR);
+//       InstMem instMem(PCOut[13:2],IR);
+//  parameter addrSize=12;
+  wire [11:0] memAddr=(~ sclk  /* & (EX_MEM_MEM_READ|EX_MEM_MEM_WRITE) */ )? EX_MEM_ALU_OUT[11:0]:PCOut[11:0];
+//   wire [31:0] singleMemOut;
+   
+   
+   SingleMemory singleMem( .sclk(sclk), .clk(clk),.rst(rst),
+             .addr(memAddr),.data_in(EX_MEM_READ_DATA2),  
+       
+       //data mem  
+        .mem_read(EX_MEM_MEM_READ), .mem_write(EX_MEM_MEM_WRITE),
+         .F3(EX_MEM_F3),
+         .data_out(IR)
+   );
+//   always @(sclk)begin
+//    memoryOut=(~sclk)?singleMemOut:memoryOut;
+//    IR=(sclk)?singleMemOut:IR;
+//   end
+   
+    
+    
         assign pcLoad=(~(`OPCODE==`OPCODE_FENCE)&&~(`OPCODE==`OPCODE_SYSTEM));
       
-     
-        RegisterNBit #(.N(96)) IF_ID( .clk(~sclk),.rst(rst),
-                              .D({PCOut,PCPlus4,IR}), .load(1'b1), 
+     wire [31:0] NO_OP= 32'h13;
+     wire [31:0] NOP_OR_INST= (sclk)? IR:NO_OP;
+        RegisterNBit #(.N(96)) IF_ID( .clk(clk),.rst(rst),
+                              .D({PCOut,PCPlus4,NOP_OR_INST}), .load(1'b1), 
                                .Q({IF_ID_PC,IF_ID_PC_PLUS4,IF_ID_INST})); 
                                
 //         HazardDetectionUnit hazardDetectionUnit( IF_ID_INST[19:15],
@@ -144,7 +165,7 @@ module Datapath(
      //4- IMM Gen
     rv32_ImmGen immGen(IF_ID_INST,imm); 
   //2- RF
-     RegFile regFile(~sclk, rst, IF_ID_INST[`IR_rs1], IF_ID_INST[`IR_rs2], MEM_WB_RD, 
+     RegFile regFile(~clk, rst, IF_ID_INST[`IR_rs1], IF_ID_INST[`IR_rs2], MEM_WB_RD, 
                                 regFileIn,  MEM_WB_REG_WRITE, rs1, rs2 ); //regWrite enables writing
            //////////////////////////////////////////////////////////////////////////////////
            //////////////////////////////////// Change  RefFileIn  //////////////////////////////////////////////
@@ -154,7 +175,7 @@ module Datapath(
            
            
          
-              RegisterNBit #(.N(300)) ID_EX( .clk(sclk),.rst(rst), //should be .N(179)
+              RegisterNBit #(.N(300)) ID_EX( .clk(clk),.rst(rst), //should be .N(179)
                                     
                                     .D({
                                     //PC's
@@ -254,7 +275,7 @@ module Datapath(
  
       
   
-   RegisterNBit #(.N(178)) EX_MEM( .clk(~sclk),.rst(rst), .load(1'b1),
+   RegisterNBit #(.N(178)) EX_MEM( .clk(clk),.rst(rst), .load(1'b1),
                           
                           .D({
                           //PC's
@@ -263,13 +284,14 @@ module Datapath(
                            
                            BranchTargetAddr,
                            
+                           
                            //Ctrls
                             ID_EX_BRANCH,    ID_EX_MEM_READ,   ID_EX_MEM_TO_REG,
                             ID_EX_MEM_WRITE, ID_EX_REG_WRITE,  ID_EX_JUMP,
                             
                             
                             ID_EX_F3,
-                            ID_EX_READ_DATA2,
+                            RS2_forwarded,
                             //ALU Flags
                              cf, zf, vf, sf,
                              //alu output
@@ -294,10 +316,10 @@ module Datapath(
 
     
     //7- Data mem
-    DataMem dataMem( .clk(sclk), .rst(rst), .F3(EX_MEM_F3),
-                     .mem_read(EX_MEM_MEM_READ),  .mem_write(EX_MEM_MEM_WRITE),
-                     .addr(EX_MEM_ALU_OUT[11:0]),  
-                     .data_in(EX_MEM_READ_DATA2), .data_out(memoryOut));
+//    DataMem dataMem( .clk(sclk), .rst(rst), .F3(EX_MEM_F3),
+//                     .mem_read(EX_MEM_MEM_READ),  .mem_write(EX_MEM_MEM_WRITE),
+//                     .addr(EX_MEM_ALU_OUT[11:0]),  
+//                     .data_in(EX_MEM_READ_DATA2), .data_out(memoryOut));
 
    
     
@@ -317,7 +339,7 @@ module Datapath(
   
   
    
- RegisterNBit #(.N(300)) MEM_WB(.clk(sclk),.rst(rst), .load(1'b1),
+ RegisterNBit #(.N(300)) MEM_WB(.clk(clk),.rst(rst), .load(1'b1),
                                  .D({EX_MEM_RD,
                                  EX_MEM_PC_PLUS4,
                                  //flags
@@ -327,7 +349,7 @@ module Datapath(
                                  EX_MEM_ALU_OUT,
                                  
                                  //mem
-                                 memoryOut
+                                 IR
                                   }),    
                                   .Q({MEM_WB_RD,
                                     MEM_WB_PC_PLUS4,

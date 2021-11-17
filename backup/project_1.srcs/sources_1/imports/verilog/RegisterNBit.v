@@ -8,6 +8,7 @@ input load,
 output wire[N-1:0]Q
 );
 
+
 wire [N-1:0]Y;
 genvar i;
 for(i=0; i<N; i=i+1) begin:f
