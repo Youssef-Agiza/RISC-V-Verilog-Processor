@@ -129,10 +129,8 @@ module Datapath(
 //    IR=(sclk)?singleMemOut:IR;
 //   end
    
-    
-    
-        assign pcLoad=(~(`OPCODE==`OPCODE_FENCE)&&~(`OPCODE==`OPCODE_SYSTEM));
-      
+    //assign pcLoad=(~(`OPCODE==`OPCODE_FENCE)&&~(`OPCODE==`OPCODE_SYSTEM));
+     assign pcLoad = (~(IF_ID_INST[6:2]==`OPCODE_FENCE)&&~(IF_ID_INST[6:2]==`OPCODE_SYSTEM)); 
      wire [31:0] NO_OP= 32'h13;
      wire [31:0] NOP_OR_INST= (sclk)? IR:NO_OP;
         RegisterNBit #(.N(96)) IF_ID( .clk(clk),.rst(rst),
@@ -324,8 +322,8 @@ module Datapath(
    
     
    	MUX4x1 PCInMux (PCPlus4,EX_MEM_BRANCH_TARGET_ADDRESS,
-   	                EX_MEM_ALU_OUT,EX_MEM_ALU_OUT, 
-   	                {EX_MEM_JUMP,BCUOut}, PCIn);
+   	                EX_MEM_BRANCH_TARGET_ADDRESS,EX_MEM_ALU_OUT, 
+   	                {EX_MEM_JUMP,BCUOut}, PCIn); //////////////////////
 //          assign PCIn=BCUOut?EX_MEM_ALU_OUT:(jump)?ALUOut:PCPlus4;
 
 
@@ -335,7 +333,7 @@ module Datapath(
     // BCUOut is now S0
 //       assign PCIn= (branch&zf)?BranchTargetAddr:PCPlus4;
 
-    assign rdSrc=(jump)?ALUOut:PCPlus4; // mux between auipc/ALU and Jal rd(pc +4)
+    //assign rdSrc=(jump)?ALUOut:PCPlus4; // mux between auipc/ALU and Jal rd(pc +4)
   
   
    
