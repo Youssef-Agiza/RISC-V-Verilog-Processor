@@ -26,7 +26,7 @@ module Datapath(
     );
     
     wire [2:0] ALUOp;
-    wire [3:0]ALUSelection;
+    wire [4:0]ALUSelection;
     wire zf,cf,sf,vf;
     wire [31:0] PCPlus4;
 	wire jump;
@@ -70,11 +70,14 @@ module Datapath(
     wire[4:0]ID_EX_RS2;
     
     
+     wire [6:0] ID_EX_INST;
+    
      //******************** EX_MEM *********************///
     wire ID_EX_BRANCH,ID_EX_MEM_READ, ID_EX_MEM_TO_REG,
          ID_EX_MEM_WRITE,ID_EX_ALU_SRC1, ID_EX_ALU_SRC2,
          ID_EX_REG_WRITE,ID_EX_JUMP;
     wire [2:0] ID_EX_ALU_OP;
+   
     
     
         
@@ -129,8 +132,10 @@ module Datapath(
 //    IR=(sclk)?singleMemOut:IR;
 //   end
    
+   
+   
     //assign pcLoad=(~(`OPCODE==`OPCODE_FENCE)&&~(`OPCODE==`OPCODE_SYSTEM));
-     assign pcLoad = (~(IF_ID_INST[6:2]==`OPCODE_FENCE)&&~(IF_ID_INST[6:2]==`OPCODE_SYSTEM)); 
+     assign pcLoad = ((~(IF_ID_INST[6:2]==`OPCODE_FENCE)&&~(IF_ID_INST[6:2]==`OPCODE_SYSTEM))); 
      wire [31:0] NO_OP= 32'h13;
      wire [31:0] NOP_OR_INST= (sclk)? IR:NO_OP;
         RegisterNBit #(.N(96)) IF_ID( .clk(clk),.rst(rst),
@@ -173,11 +178,11 @@ module Datapath(
            
            
          
-              RegisterNBit #(.N(300)) ID_EX( .clk(clk),.rst(rst), //should be .N(179)
+              RegisterNBit #(.N(300)) ID_EX( .clk(clk),.rst(rst),.load(~flush), //should be .N(179)
                                     
                                     .D({
                                     //PC's
-                                    IF_ID_PC,IF_ID_PC_PLUS4,
+                                    IF_ID_PC,IF_ID_PC_PLUS4,IF_ID_INST[6:0],
                                     
                                     //rs1, rs2
                                    IF_ID_INST[`IR_rs1], IF_ID_INST[`IR_rs2],
@@ -196,7 +201,7 @@ module Datapath(
                                     
                                     .Q({
                                          //PC's
-                                       ID_EX_PC, ID_EX_PC_PLUS4,
+                                       ID_EX_PC, ID_EX_PC_PLUS4,ID_EX_INST[6:0],
                                        
                                        //rs1, rs2
                                         ID_EX_RS1,ID_EX_RS2,
@@ -212,7 +217,7 @@ module Datapath(
                                        ID_EX_MEM_WRITE,ID_EX_ALU_SRC1, ID_EX_ALU_SRC2,
                                        ID_EX_REG_WRITE,ID_EX_JUMP,
                                         ID_EX_ALU_OP
-                                       }), .load(~flush) 
+                                       }) 
                                      );   
   //******************** EX_MEM start*********************///
 
